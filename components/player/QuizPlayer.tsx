@@ -20,7 +20,18 @@ const WRONG = "#FF4D4D";
  * Instagram Story quizzes, not exams, and nothing about the score touches
  * money or the database.
  */
-export function QuizPlayer({ questions }: { questions: QuizQuestion[] }) {
+export function QuizPlayer({
+  questions,
+  scoreAd,
+}: {
+  questions: QuizQuestion[];
+  /**
+   * Rendered under the scorecard once the quiz is over. Passed in from the
+   * server page rather than imported here, so the ad slot stays a server
+   * component and adds nothing to this bundle.
+   */
+  scoreAd?: React.ReactNode;
+}) {
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -53,7 +64,14 @@ export function QuizPlayer({ questions }: { questions: QuizQuestion[] }) {
   }
 
   if (finished) {
-    return <Scorecard score={score} total={questions.length} onReplay={restart} />;
+    return (
+      <Scorecard
+        score={score}
+        total={questions.length}
+        onReplay={restart}
+        ad={scoreAd}
+      />
+    );
   }
 
   return (
@@ -171,10 +189,12 @@ function Scorecard({
   score,
   total,
   onReplay,
+  ad,
 }: {
   score: number;
   total: number;
   onReplay: () => void;
+  ad?: React.ReactNode;
 }) {
   return (
     <div className="text-center">
@@ -202,6 +222,8 @@ function Scorecard({
           Play again
         </button>
       </div>
+
+      {ad && <div className="mt-12">{ad}</div>}
     </div>
   );
 }

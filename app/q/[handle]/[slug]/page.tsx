@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AdSlot } from "@/components/player/AdSlot";
+import { AdSlot } from "@/components/AdSlot";
 import { QuizPlayer } from "@/components/player/QuizPlayer";
 import { ViewTracker } from "@/components/player/ViewTracker";
 import { normalizeHandle } from "@/lib/auth/handle";
@@ -107,11 +107,7 @@ export default async function QuizPage({ params }: Params) {
         <span className="font-pixel text-[10px] text-white/70">QuizStar</span>
       </Link>
 
-      <div className="mt-6">
-        <AdSlot size="leaderboard" label="728 × 90" />
-      </div>
-
-      <header className="mt-8 text-center">
+      <header className="mt-10 text-center">
         <h1 className="font-pixel text-lg leading-[1.6] text-white">
           {quiz.title}
         </h1>
@@ -120,15 +116,22 @@ export default async function QuizPage({ params }: Params) {
         </p>
       </header>
 
+      {/* Above the first question. The only slot shown while playing — more
+          would slow the page down and get in the way of the quiz itself. */}
+      <div className="mt-8">
+        <AdSlot size="leaderboard" label="728 × 90" />
+      </div>
+
       <div className="mt-10 flex-1">
-        <QuizPlayer questions={quiz.questions} />
+        <QuizPlayer
+          questions={quiz.questions}
+          // Server-rendered here, displayed by the player only once the
+          // scorecard is up — so nothing loads mid-quiz.
+          scoreAd={<AdSlot size="rectangle" label="300 × 250" />}
+        />
       </div>
 
-      <div className="mt-12">
-        <AdSlot size="rectangle" label="300 × 250" />
-      </div>
-
-      <footer className="mt-8 text-center text-[10px] leading-relaxed text-white/25">
+      <footer className="mt-12 text-center text-[10px] leading-relaxed text-white/25">
         Made with QuizStar. Ad slots are placeholders — no real ads are served.
       </footer>
     </main>

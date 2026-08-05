@@ -1,3 +1,4 @@
+import { AdSlot } from "@/components/AdSlot";
 import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
@@ -16,6 +17,12 @@ export default function Home() {
         <WhyItWorks />
         <Stats />
         <CTA />
+
+        {/* Last thing before the footer, so it never sits between the pitch
+            and the signup call to action. */}
+        <div className="mx-auto w-full max-w-6xl px-5 pb-20">
+          <AdSlot size="leaderboard" label="728 × 90" />
+        </div>
       </main>
       <Footer />
     </>

@@ -27,6 +27,11 @@ export const metadata: Metadata = {
       "Turn one link in your Story into ad revenue. Built for influencers, whatever size their following.",
     type: "website",
   },
+  // Site-ownership proof for Monetag. Renders as <meta name="monetag"> on
+  // every page, which is what their crawler looks for during review.
+  other: {
+    monetag: "39c50852c2f711d2c50e1c51b8d745ad",
+  },
 };
 
 export default function RootLayout({
