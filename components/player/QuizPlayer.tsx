@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { MonetagVignette } from "@/components/MonetagVignette";
 import type { QuizQuestion } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
 
@@ -20,18 +21,7 @@ const WRONG = "#FF4D4D";
  * Instagram Story quizzes, not exams, and nothing about the score touches
  * money or the database.
  */
-export function QuizPlayer({
-  questions,
-  scoreAd,
-}: {
-  questions: QuizQuestion[];
-  /**
-   * Rendered under the scorecard once the quiz is over. Passed in from the
-   * server page rather than imported here, so the ad slot stays a server
-   * component and adds nothing to this bundle.
-   */
-  scoreAd?: React.ReactNode;
-}) {
+export function QuizPlayer({ questions }: { questions: QuizQuestion[] }) {
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -65,12 +55,13 @@ export function QuizPlayer({
 
   if (finished) {
     return (
-      <Scorecard
-        score={score}
-        total={questions.length}
-        onReplay={restart}
-        ad={scoreAd}
-      />
+      <>
+        <Scorecard score={score} total={questions.length} onReplay={restart} />
+        {/* Mounted here rather than on the page, so the overlay can only fire
+            once someone has finished — never over a question they're
+            answering. */}
+        <MonetagVignette />
+      </>
     );
   }
 
@@ -189,12 +180,10 @@ function Scorecard({
   score,
   total,
   onReplay,
-  ad,
 }: {
   score: number;
   total: number;
   onReplay: () => void;
-  ad?: React.ReactNode;
 }) {
   return (
     <div className="text-center">
@@ -222,8 +211,6 @@ function Scorecard({
           Play again
         </button>
       </div>
-
-      {ad && <div className="mt-12">{ad}</div>}
     </div>
   );
 }

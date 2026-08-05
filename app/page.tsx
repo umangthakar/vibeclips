@@ -1,4 +1,5 @@
 import { AdSlot } from "@/components/AdSlot";
+import { MonetagVignette } from "@/components/MonetagVignette";
 import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
@@ -25,6 +26,8 @@ export default function Home() {
         </div>
       </main>
       <Footer />
+      {/* Unconditional here — no quiz in progress to interrupt. */}
+      <MonetagVignette />
     </>
   );
 }
