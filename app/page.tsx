@@ -1,10 +1,8 @@
 import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
-import { MarqueeBar } from "@/components/sections/MarqueeBar";
-import { Services } from "@/components/sections/Services";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { WhyItWorks } from "@/components/sections/WhyItWorks";
 import { Stats } from "@/components/sections/Stats";
-import { Pricing } from "@/components/sections/Pricing";
 import { CTA } from "@/components/sections/CTA";
 import { Footer } from "@/components/sections/Footer";
 
@@ -14,11 +12,9 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <MarqueeBar />
-        <Services />
         <HowItWorks />
+        <WhyItWorks />
         <Stats />
-        <Pricing />
         <CTA />
       </main>
       <Footer />

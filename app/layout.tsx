@@ -17,14 +17,14 @@ const pixel = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "VibeClips — Your stream ends. Your clips don't.",
+  title: "QuizStar — You post. They play. You earn.",
   description:
-    "VibeClips turns every live stream into 50+ daily clips, distributed across 150+ fan pages on TikTok, Reels & Shorts. Built for streamers on Twitch, YouTube Live & Kick.",
+    "Make a quiz about you, share one link to your Instagram Story, and earn a cut of the ad revenue every time a follower plays. No signup for them, no follower minimum for you.",
   icons: { icon: "/logo.png" },
   openGraph: {
-    title: "VibeClips — Your stream ends. Your clips don't.",
+    title: "QuizStar — You post. They play. You earn.",
     description:
-      "Stream clipping & mass distribution for live streamers on Twitch, YouTube Live & Kick.",
+      "Turn one link in your Story into ad revenue. Built for influencers, whatever size their following.",
     type: "website",
   },
 };

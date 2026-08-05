@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { label: "Services", href: "#services" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Contact", href: "#contact" },
+  { label: "Why It Works", href: "#why-it-works" },
+  { label: "The Numbers", href: "#stats" },
+  { label: "Get Started", href: "#contact" },
 ];
 
 export function Nav() {
@@ -39,14 +40,14 @@ export function Nav() {
         <a href="#top" className="flex items-center gap-3">
           <Image
             src="/logo.png"
-            alt="VibeClips"
+            alt="QuizStar"
             width={1174}
             height={876}
             priority
             className="h-9 w-auto"
           />
           <span className="font-pixel hidden text-sm text-white sm:inline">
-            VibeClips
+            QuizStar
           </span>
         </a>
 
@@ -65,9 +66,7 @@ export function Nav() {
           </ul>
 
           <Button asChild size="sm" className="hidden sm:inline-flex">
-            <a href="mailto:clips@vibechan.com?subject=I%20Want%20To%20Grow%20My%20Stream&body=Hey%20VibeClips!%0A%0AI%27m%20interested%20in%20growing%20my%20stream.%0A%0AMy%20channel%20link%3A%20%0AMy%20platform%20(Twitch%2FYouTube%2FKick)%3A%20%0AWhat%20I%27m%20looking%20for%3A%20">
-              Work with us
-            </a>
+            <Link href="/signup">Create your quiz</Link>
           </Button>
         </div>
       </nav>

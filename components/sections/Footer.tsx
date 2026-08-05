@@ -14,20 +14,20 @@ export function Footer() {
         <div className="flex items-center gap-3">
           <Image
             src="/logo.png"
-            alt="VibeClips"
+            alt="QuizStar"
             width={1174}
             height={876}
             className="h-8 w-auto"
           />
-          <span className="font-pixel text-xs text-white">VibeClips</span>
+          <span className="font-pixel text-xs text-white">QuizStar</span>
         </div>
 
         <div className="flex flex-col items-center gap-3 text-center">
           <p className="font-pixel text-[9px] leading-relaxed text-white/60">
-            Built for streamers who refuse to stay small.
+            Built for creators who&apos;d rather not chase brand deals.
           </p>
           <p className="font-pixel text-[9px] leading-relaxed text-white/45">
-            &copy; 2025 VibeClips &middot; Powered by{" "}
+            &copy; 2026 QuizStar &middot; Powered by{" "}
             <span className="text-grad">VibeChan</span>
           </p>
         </div>

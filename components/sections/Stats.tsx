@@ -4,11 +4,16 @@ import { CountUp } from "@/components/CountUp";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
+/**
+ * Facts about how QuizStar works — deliberately not traction numbers. Every
+ * figure here is something the product actually guarantees, so none of it goes
+ * stale or overstates what's been built.
+ */
 const stats = [
-  { to: 4500, suffix: "+", label: "Clips every month", indent: "md:ml-0" },
-  { to: 100, suffix: "%", label: "Done for you", indent: "md:ml-16" },
-  { to: 24, suffix: "HRS", label: "First clips go live", indent: "md:ml-32" },
-  { to: Infinity, suffix: "", label: "Internet coverage", indent: "md:ml-48" },
+  { to: 70, suffix: "%", label: "Your cut of every play", indent: "md:ml-0" },
+  { to: 0, suffix: "", label: "Followers needed to start", indent: "md:ml-16" },
+  { to: 1, suffix: "", label: "Link to share anywhere", indent: "md:ml-32" },
+  { to: 2, suffix: "MIN", label: "To publish your first quiz", indent: "md:ml-48" },
 ];
 
 export function Stats() {
@@ -20,7 +25,7 @@ export function Stats() {
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <span className="font-pixel text-[10px] uppercase tracking-wider text-[#FF6A00]">
-            // The receipts
+            // The short version
           </span>
         </Reveal>
 
@@ -30,12 +35,12 @@ export function Stats() {
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:gap-6">
                 <div
                   className={cn(
-                    "font-mono text-6xl font-extrabold tracking-tighter text-grad sm:text-7xl lg:text-8xl"
+                    "text-grad font-mono text-6xl font-extrabold tracking-tighter sm:text-7xl lg:text-8xl"
                   )}
                 >
                   <CountUp to={stat.to} suffix={stat.suffix} />
                 </div>
-                <div className="mb-3 font-pixel text-[11px] uppercase tracking-wider text-white/60">
+                <div className="font-pixel mb-3 text-[11px] uppercase tracking-wider text-white/60">
                   {stat.label}
                 </div>
               </div>
