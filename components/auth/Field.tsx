@@ -1,7 +1,5 @@
 import { cn } from "@/lib/utils";
-
-const inputClass =
-  "w-full rounded-none border-2 border-dashed border-[rgba(123,47,255,0.4)] bg-[#0A0A0F] px-4 py-3 text-white placeholder:text-white/25 outline-none transition-colors focus:border-[#7B2FFF] disabled:opacity-50";
+import { inputClass, inputErrorClass, labelClass } from "@/components/ui/input";
 
 export function Field({
   label,
@@ -21,10 +19,7 @@ export function Field({
 
   return (
     <div>
-      <label
-        htmlFor={name}
-        className="font-pixel block text-[9px] uppercase tracking-wider text-white/60"
-      >
+      <label htmlFor={name} className={labelClass}>
         {label}
       </label>
       <input
@@ -36,12 +31,7 @@ export function Field({
             .filter(Boolean)
             .join(" ") || undefined
         }
-        className={cn(
-          inputClass,
-          "mt-2",
-          error && "border-solid border-[#FF4D4D]",
-          className
-        )}
+        className={cn(inputClass, "mt-2", error && inputErrorClass, className)}
         {...props}
       />
       {hint && !error && (
@@ -68,16 +58,13 @@ export function HandleField({
 }) {
   return (
     <div>
-      <label
-        htmlFor="handle"
-        className="font-pixel block text-[9px] uppercase tracking-wider text-white/60"
-      >
+      <label htmlFor="handle" className={labelClass}>
         Instagram handle
       </label>
       <div
         className={cn(
           "mt-2 flex items-center border-2 border-dashed border-[rgba(123,47,255,0.4)] bg-[#0A0A0F] transition-colors focus-within:border-[#7B2FFF]",
-          error && "border-solid border-[#FF4D4D]"
+          error && inputErrorClass
         )}
       >
         <span className="font-pixel select-none pl-4 pr-1 text-sm text-white/40">
