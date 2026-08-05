@@ -84,7 +84,18 @@ export type Database = {
       };
     };
     Views: Record<never, never>;
-    Functions: Record<never, never>;
+    Functions: {
+      /** See supabase/migrations/0002_record_quiz_view.sql. */
+      record_quiz_view: {
+        Args: {
+          p_quiz_id: string;
+          p_session_id: string;
+          p_ip: string | null;
+          p_revenue: number;
+        };
+        Returns: { credited: boolean; amount: number }[];
+      };
+    };
     Enums: Record<never, never>;
     CompositeTypes: Record<never, never>;
   };

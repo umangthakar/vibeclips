@@ -22,8 +22,15 @@ public key can't read a thing. See "Why no Supabase Auth" below.
 
 ## 2. Apply the schema
 
-Open the Supabase dashboard → **SQL Editor** → New query, paste the whole of
-`migrations/0001_init.sql`, and run it. It is idempotent, so re-running is safe.
+Open the Supabase dashboard → **SQL Editor** → New query, and run each file in
+`migrations/` in order:
+
+| File | What it adds |
+| ---- | ------------ |
+| `0001_init.sql` | The four tables, constraints, indexes and the RLS lockdown |
+| `0002_record_quiz_view.sql` | `record_quiz_view()` — logs a view and credits the influencer, atomically |
+
+Both are idempotent, so re-running either is safe.
 
 <details>
 <summary>Or with the Supabase CLI</summary>
@@ -41,8 +48,10 @@ npx supabase db push
 npm run db:check
 ```
 
-Prints a row count for each of the four tables, then asserts the publishable key
-is blocked from reading every one of them.
+Checks every column of the four tables, asserts the publishable key is blocked
+from reading all of them, and probes `record_quiz_view()` with a quiz id that
+cannot exist — proving the function is installed and that the public key cannot
+call it, without writing a row.
 
 ## Why no Supabase Auth (and no public-key access)
 
@@ -74,6 +83,14 @@ was_credited` is what makes revenue credit-once-per-session: a second credited
 insert for the same session and quiz fails with a unique violation, so
 refresh-spam can only ever add `was_credited = false` rows. This is enforced by
 the database, not by application logic, so it holds under concurrent requests too.
+
+**`record_quiz_view()`** — the only thing that writes earnings. It logs the view
+and moves the money in one transaction, and instead of checking for an existing
+credited row it just *tries* to insert one: the partial unique index above is
+what grants or denies the credit, so two simultaneous requests for the same
+session can't both be paid. Losing that race is caught and downgraded to an
+uncredited log row. The influencer's 70% cut is `influencer_share()`, kept in
+the database next to the other money rules rather than in application code.
 
 **`payouts`** — append-only ledger of manual payouts. Recording one is what resets
 `current_balance`; `total_earnings` is untouched.

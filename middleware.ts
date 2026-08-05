@@ -1,8 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth/jwt";
+import {
+  PLAYER_SESSION_COOKIE,
+  newPlayerSessionId,
+} from "@/lib/quiz/player-session";
 
 /**
- * Auth guard.
+ * Auth guard, plus session-id issuing for anonymous quiz players.
  *
  * Runs on the Edge runtime, so it imports lib/auth/jwt.ts (jose only) and never
  * touches bcrypt, Supabase, or `next/headers`. It verifies the token's
@@ -12,9 +16,26 @@ import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth/jwt";
  * fails there.
  */
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Public quiz pages: no auth to check, just make sure the visitor is
+  // carrying a session id before the page can try to record a view.
+  if (pathname.startsWith("/q/")) {
+    const response = NextResponse.next();
+    if (!request.cookies.get(PLAYER_SESSION_COOKIE)) {
+      response.cookies.set(PLAYER_SESSION_COOKIE, newPlayerSessionId(), {
+        httpOnly: true, // nothing in the browser needs to read it
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax", // survives the click-through from an Instagram Story
+        path: "/",
+        // No maxAge on purpose — see lib/quiz/player-session.ts.
+      });
+    }
+    return response;
+  }
+
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   const session = await verifySessionToken(token);
-  const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/dashboard")) {
     if (session) return NextResponse.next();
@@ -43,5 +64,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/signup"],
+  matcher: ["/dashboard/:path*", "/login", "/signup", "/q/:path*"],
 };

@@ -44,8 +44,12 @@ const options = {
 
 /** PostgREST: table absent from the schema cache. */
 const MISSING_TABLE = "PGRST205";
+/** PostgREST: function absent from the schema cache. */
+const MISSING_FUNCTION = "PGRST202";
 /** Postgres: insufficient_privilege — what a correct lockdown produces. */
 const NO_PRIVILEGE = "42501";
+/** Postgres: foreign_key_violation — what record_quiz_view raises for an unknown quiz. */
+const NO_SUCH_QUIZ = "23503";
 
 const pad = (s) => s.padEnd(15);
 let failed = false;
@@ -127,4 +131,59 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nSchema and lockdown both verified.");
+// --- 3. record_quiz_view --------------------------------------------------
+// Called with a quiz id that cannot exist. The function raises
+// foreign_key_violation before touching anything, so this proves it is present
+// and executable without writing a row or crediting a rupee.
+const ABSENT_QUIZ = "00000000-0000-0000-0000-000000000000";
+const probeArgs = {
+  p_quiz_id: ABSENT_QUIZ,
+  p_session_id: "db-check-probe",
+  p_ip: null,
+  p_revenue: 0.1,
+};
+
+console.log("\nrecord_quiz_view (0002):");
+{
+  const { error } = await admin.rpc("record_quiz_view", probeArgs);
+
+  if (error?.code === NO_SUCH_QUIZ) {
+    console.log(`  ok    ${pad("function")} present and callable`);
+  } else if (error?.code === MISSING_FUNCTION) {
+    console.error(
+      `  FAIL  ${pad("function")} not found — apply ` +
+        "supabase/migrations/0002_record_quiz_view.sql"
+    );
+    failed = true;
+  } else if (error) {
+    console.error(
+      `  FAIL  ${pad("function")} unexpected error ${error.code} — ${error.message}`
+    );
+    failed = true;
+  } else {
+    // No error means it credited a view for a quiz that does not exist.
+    console.error(`  FAIL  ${pad("function")} accepted an unknown quiz id`);
+    failed = true;
+  }
+}
+
+if (publishableKey) {
+  const anon = createClient(url, publishableKey, options);
+  const { error } = await anon.rpc("record_quiz_view", probeArgs);
+
+  if (error?.code === NO_PRIVILEGE || error?.code === MISSING_FUNCTION) {
+    console.log(`  ok    ${pad("lockdown")} blocked for the public key`);
+  } else {
+    console.error(
+      `  FAIL  ${pad("lockdown")} public key can call it — it writes money`
+    );
+    failed = true;
+  }
+}
+
+if (failed) {
+  console.error("\nrecord_quiz_view is not correctly installed.");
+  process.exit(1);
+}
+
+console.log("\nSchema, lockdown and revenue function all verified.");
